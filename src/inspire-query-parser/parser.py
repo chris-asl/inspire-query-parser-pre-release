@@ -72,7 +72,10 @@ QueryExpressionTail.grammar = [
 
 
 class StartRule(UnaryRule):
-    grammar = omit(optional(FindOp)), attr('op', QueryExpression)
+    grammar = [
+        (omit(optional(FindOp)), attr('op', QueryExpression)),
+        attr('op', QueryExpression)
+    ]
 
 
 if __name__ == '__main__':
