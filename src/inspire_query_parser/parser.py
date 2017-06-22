@@ -4,6 +4,7 @@ from pypeg2 import attr, Keyword, Literal, maybe_some, parse, omit, optional, re
 import ast
 from utils.config import INSPIRE_CATEGORIES
 
+
 class LeafRule(ast.Leaf):
     def __init__(self):
         pass
@@ -109,13 +110,18 @@ class BooleanQuery(UnaryRule):
     ]
 
 
+class ParenthesizedQuery(UnaryRule):
+    grammar = (omit(Literal('(')), attr('op', QueryExpression), omit(Literal(')')))
+
+
 class QueryExpressionTail(UnaryRule):
     pass
 
 
 QueryExpression.grammar = [
     attr('children', (TermExpression, QueryExpressionTail)),
-    attr('children', NotQuery)
+    attr('children', NotQuery),
+    attr('children', ParenthesizedQuery),
 ]
 
 
@@ -134,7 +140,7 @@ class StartRule(UnaryRule):
 
 
 if __name__ == '__main__':
-    # print(parse("find author ellis", StartRule))
-    # print(parse("author:ellis", StartRule))
-    # print(parse("author ellis and title boson", StartRule))
-    print(parse("author ellis and not title boson", StartRule))
+    print(parse("find author ellis", StartRule))
+    print(parse("author:ellis", StartRule))
+    print(parse("author ellis and title boson", StartRule))
+    print(parse("author ellis and (title boson or (author xi and title foo))", StartRule))
