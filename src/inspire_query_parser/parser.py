@@ -2,7 +2,7 @@ from __future__ import unicode_literals, print_function
 from pypeg2 import attr, Keyword, Literal, maybe_some, parse, omit, optional, re, word
 
 import ast
-
+from utils.config import INSPIRE_CATEGORIES
 
 class LeafRule(ast.Leaf):
     def __init__(self):
@@ -30,6 +30,10 @@ class Find(Keyword):
     regex = re.compile(r"(find|fin|f)", re.IGNORECASE)
 
 
+class InspireCategory(LeafRule):
+    grammar = attr('value', re.compile(r"({0})\b".format("|".join(INSPIRE_CATEGORIES))))
+
+
 class And(object):
     grammar = omit([
         re.compile(r"and", re.IGNORECASE),
@@ -46,8 +50,8 @@ class Or(object):
 
 
 # #### Leafs #####
-class InspireCategory(LeafRule):
-    grammar = attr('value', word)
+class Qualifier(UnaryRule):
+    grammar = attr('op', InspireCategory)
 
 
 class Phrase(UnaryRule):
@@ -60,11 +64,11 @@ class QueryExpression(ListRule):
 
 
 class TermExpressionWithoutColon(BinaryRule):
-    grammar = attr('left', InspireCategory), attr('right', Phrase)
+    grammar = attr('left', Qualifier), attr('right', Phrase)
 
 
 class TermExpressionWithColon(BinaryRule):
-    grammar = attr('left', InspireCategory), omit(optional(':')), attr('right', Phrase)
+    grammar = attr('left', Qualifier), omit(optional(':')), attr('right', Phrase)
 
 
 class TermExpression(UnaryRule):
