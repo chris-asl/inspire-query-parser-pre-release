@@ -46,6 +46,13 @@ class Or(object):
         re.compile(r"or", re.IGNORECASE),
         Literal('|'),
     ])
+
+
+class Not(object):
+    grammar = omit([
+        re.compile(r"not", re.IGNORECASE),
+        Literal('-'),
+    ])
 # ########################
 
 
@@ -91,6 +98,10 @@ class OrQuery(UnaryRule):
 
 
 # #### Main productions ####
+class NotQuery(UnaryRule):
+    grammar = omit(Not), attr('op', QueryExpression)
+
+
 class BooleanQuery(UnaryRule):
     grammar = [
         attr('op', AndQuery),
@@ -103,7 +114,8 @@ class QueryExpressionTail(UnaryRule):
 
 
 QueryExpression.grammar = [
-    attr('children', (TermExpression, QueryExpressionTail))
+    attr('children', (TermExpression, QueryExpressionTail)),
+    attr('children', NotQuery)
 ]
 
 
@@ -122,7 +134,7 @@ class StartRule(UnaryRule):
 
 
 if __name__ == '__main__':
-    print(parse("find author ellis", StartRule))
-    print(parse("author:ellis", StartRule))
-    print(parse("author ellis and title boson", StartRule))
-    # print(parse("author ellis and not title boson", StartRule))
+    # print(parse("find author ellis", StartRule))
+    # print(parse("author:ellis", StartRule))
+    # print(parse("author ellis and title boson", StartRule))
+    print(parse("author ellis and not title boson", StartRule))
