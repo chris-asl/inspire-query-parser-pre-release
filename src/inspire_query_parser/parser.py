@@ -121,4 +121,4 @@ if __name__ == '__main__':
     print(parse("find author ellis", StartRule))
     print(parse("author:ellis", StartRule))
     print(parse("author ellis and title boson", StartRule))
-    print(parse("author ellis OR title boson", StartRule))
+    # print(parse("author ellis and not title boson", StartRule))
