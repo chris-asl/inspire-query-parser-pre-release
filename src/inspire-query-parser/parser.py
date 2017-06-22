@@ -1,5 +1,5 @@
 from __future__ import unicode_literals, print_function
-from pypeg2 import attr, maybe_some, parse, omit, optional, re, word
+from pypeg2 import attr, Keyword, Literal, maybe_some, parse, omit, optional, re, word
 
 import ast
 
@@ -25,16 +25,38 @@ class ListRule(ast.ListOp):
 # ########################
 
 
-class FindOp(LeafRule):
-    grammar = attr('value', re.compile("find", re.IGNORECASE))
+# #### Keywords ####
+class Find(Keyword):
+    regex = re.compile(r"(find|fin|f)", re.IGNORECASE)
 
 
+class And(object):
+    grammar = omit([
+        re.compile(r"and", re.IGNORECASE),
+        Literal('+'),
+    ])
+
+
+class Or(object):
+    grammar = omit([
+        re.compile(r"or", re.IGNORECASE),
+        Literal('|'),
+    ])
+# ########################
+
+
+# #### Leafs #####
 class InspireCategory(LeafRule):
     grammar = attr('value', word)
 
 
 class Phrase(UnaryRule):
     grammar = attr('op', word)
+# ########################
+
+
+class QueryExpression(ListRule):
+    pass
 
 
 class TermExpressionWithoutColon(BinaryRule):
@@ -55,30 +77,48 @@ class TermExpression(UnaryRule):
     )
 
 
+class AndQuery(UnaryRule):
+    grammar = omit(And), attr('op', QueryExpression)
+
+
+class OrQuery(UnaryRule):
+    grammar = omit(Or), attr('op', QueryExpression)
+# ########################
+
+
+# #### Main productions ####
+class BooleanQuery(UnaryRule):
+    grammar = [
+        attr('op', AndQuery),
+        attr('op', OrQuery)
+    ]
+
+
 class QueryExpressionTail(UnaryRule):
     pass
 
 
-class QueryExpression(ListRule):
-    grammar = [
-        attr('children', [TermExpression, QueryExpressionTail])
-    ]
+QueryExpression.grammar = [
+    attr('children', (TermExpression, QueryExpressionTail))
+]
 
 
 QueryExpressionTail.grammar = [
-    attr('op', QueryExpression),
+    attr('op', BooleanQuery),
     attr('op', None)
 ]
 
 
 class StartRule(UnaryRule):
     grammar = [
-        (omit(optional(FindOp)), attr('op', QueryExpression)),
+        (omit(Find), attr('op', QueryExpression)),
         attr('op', QueryExpression)
     ]
+# ########################
 
 
 if __name__ == '__main__':
     print(parse("find author ellis", StartRule))
     print(parse("author:ellis", StartRule))
-    # print(parse("author ellis title Boson", StartRule))
+    print(parse("author ellis and title boson", StartRule))
+    print(parse("author ellis OR title boson", StartRule))
