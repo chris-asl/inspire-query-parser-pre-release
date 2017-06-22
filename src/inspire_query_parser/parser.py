@@ -54,6 +54,10 @@ class Not(object):
         re.compile(r"not", re.IGNORECASE),
         Literal('-'),
     ])
+
+
+class Range(object):
+    grammar = omit(Literal("->"))
 # ########################
 
 
@@ -62,8 +66,43 @@ class Qualifier(UnaryRule):
     grammar = attr('op', InspireCategory)
 
 
-class Phrase(UnaryRule):
-    grammar = attr('op', word)
+class NormalPhrase(LeafRule):
+    grammar = attr('value', word)
+
+
+class NormalPhraseSpanTail(LeafRule):
+    grammar = [
+        (omit(Range), attr('value', word)),
+        attr('value', None)
+    ]
+
+
+class ExactPhrase(LeafRule):
+    grammar = omit(Literal('"')), attr('value', word), omit(Literal('"'))
+
+
+class ExactPhraseSpanTail(LeafRule):
+    grammar = [
+        (omit(Range), omit(Literal('"')), attr('value', word), omit(Literal('"'))),
+        attr('value', None)
+    ]
+
+
+class PartialPhrase(LeafRule):
+    grammar = omit(Literal("'")), attr('value', word), omit(Literal("'"))
+
+
+class RegexPhrase(LeafRule):
+    grammar = omit(Literal('/^')), attr('value', word), omit(Literal('$/'))
+
+
+class Phrase(ListRule):
+    grammar = [
+        attr('children', (NormalPhrase, NormalPhraseSpanTail)),
+        attr('children', (ExactPhrase, ExactPhraseSpanTail)),
+        attr('children', PartialPhrase),
+        attr('children', RegexPhrase),
+    ]
 # ########################
 
 
@@ -140,7 +179,9 @@ class StartRule(UnaryRule):
 
 
 if __name__ == '__main__':
-    print(parse("find author ellis", StartRule))
+    print(parse('find author "ellis"', StartRule))
+    print(parse('find author ellis->zed', StartRule))
+    print(parse('find author "ellis"->"zed"', StartRule))
     print(parse("author:ellis", StartRule))
-    print(parse("author ellis and title boson", StartRule))
-    print(parse("author ellis and (title boson or (author xi and title foo))", StartRule))
+    print(parse("author ellis and title 'boson'", StartRule))
+    print(parse("author ellis and (title boson or (author /^xi$/ and title foo))", StartRule))
