@@ -39,6 +39,7 @@ class And(object):
     grammar = omit([
         re.compile(r"and", re.IGNORECASE),
         Literal('+'),
+        Literal('&'),
     ])
 
 
@@ -150,7 +151,7 @@ class BooleanQuery(UnaryRule):
 
 
 class ParenthesizedQuery(UnaryRule):
-    grammar = (omit(Literal('(')), attr('op', QueryExpression), omit(Literal(')')))
+    grammar = omit(Literal('(')), attr('op', QueryExpression), omit(Literal(')'))
 
 
 class QueryExpressionTail(UnaryRule):
