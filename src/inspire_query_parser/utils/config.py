@@ -1,6 +1,9 @@
-INSPIRE_CATEGORIES = (
+INSPIRE_PARSER_KEYWORDS = (
     "title",
     "author",
     "journal",
-    "experiment"
+    "experiment",
+    "author-count",
+    "first-author",
+    "exact-author",
 )

@@ -2,7 +2,7 @@ from __future__ import unicode_literals, print_function
 from pypeg2 import attr, Keyword, Literal, maybe_some, parse, omit, optional, re, word
 
 import ast
-from utils.config import INSPIRE_CATEGORIES
+from utils.config import INSPIRE_PARSER_KEYWORDS
 
 
 class LeafRule(ast.Leaf):
@@ -39,10 +39,6 @@ class Reference(Keyword):
     regex = re.compile(r"reference", re.IGNORECASE)
 
 
-class InspireCategory(LeafRule):
-    grammar = attr('value', re.compile(r"({0})\b".format("|".join(INSPIRE_CATEGORIES))))
-
-
 class And(object):
     grammar = omit([
         re.compile(r"and", re.IGNORECASE),
@@ -71,8 +67,8 @@ class Range(object):
 
 
 # #### Leafs #####
-class Qualifier(UnaryRule):
-    grammar = attr('op', InspireCategory)
+class Qualifier(LeafRule):
+    grammar = attr('value', re.compile(r"({0})\b".format("|".join(INSPIRE_PARSER_KEYWORDS))))
 
 
 class NormalPhrase(LeafRule):
