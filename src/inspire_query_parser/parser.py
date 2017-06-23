@@ -2,7 +2,7 @@ from __future__ import unicode_literals, print_function
 from pypeg2 import attr, Keyword, Literal, maybe_some, parse, omit, optional, re, word
 
 import ast
-from utils.config import INSPIRE_PARSER_KEYWORDS
+from config import INSPIRE_PARSER_KEYWORDS
 
 
 class LeafRule(ast.Leaf):
