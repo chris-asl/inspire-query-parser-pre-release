@@ -139,6 +139,7 @@ class TermExpression(UnaryRule):
             TermExpressionWithColon,
             FulltextOp,
             ReferenceOp,
+            Phrase,
         ]
     )
 
@@ -203,3 +204,5 @@ if __name__ == '__main__':
     print(parse("fulltext:boson", StartRule))
     print(parse("reference ellis", StartRule))
     print(parse('reference "Ellis"', StartRule))
+    print(parse('ellis', StartRule))
+    print(parse("'ellis'", StartRule))
