@@ -31,6 +31,14 @@ class Find(Keyword):
     regex = re.compile(r"(find|fin|f)", re.IGNORECASE)
 
 
+class Fulltext(Keyword):
+    regex = re.compile(r"fulltext", re.IGNORECASE)
+
+
+class Reference(Keyword):
+    regex = re.compile(r"reference", re.IGNORECASE)
+
+
 class InspireCategory(LeafRule):
     grammar = attr('value', re.compile(r"({0})\b".format("|".join(INSPIRE_CATEGORIES))))
 
@@ -104,7 +112,15 @@ class Phrase(ListRule):
         attr('children', PartialPhrase),
         attr('children', RegexPhrase),
     ]
-# ########################
+
+
+class FulltextOp(UnaryRule):
+    grammar = omit(Fulltext), omit(optional(':')), attr('op', NormalPhrase)
+
+
+class ReferenceOp(UnaryRule):
+    grammar = omit(Reference), omit(optional(':')), attr('op', [ExactPhrase, NormalPhrase])
+########################
 
 
 class QueryExpression(ListRule):
@@ -124,7 +140,9 @@ class TermExpression(UnaryRule):
         'op',
         [
             TermExpressionWithoutColon,
-            TermExpressionWithColon
+            TermExpressionWithColon,
+            FulltextOp,
+            ReferenceOp,
         ]
     )
 
@@ -186,3 +204,6 @@ if __name__ == '__main__':
     print(parse("author:ellis", StartRule))
     print(parse("author ellis and title 'boson'", StartRule))
     print(parse("author ellis and (title boson or (author /^xi$/ and title foo))", StartRule))
+    print(parse("fulltext:boson", StartRule))
+    print(parse("reference ellis", StartRule))
+    print(parse('reference "Ellis"', StartRule))
