@@ -28,7 +28,7 @@ class ListRule(ast.ListOp):
 
 # #### Keywords ####
 class Find(Keyword):
-    regex = re.compile(r"(find|fin|f)", re.IGNORECASE)
+    regex = re.compile(r"(find|fin|f)\s", re.IGNORECASE)
 
 
 class Fulltext(Keyword):
@@ -41,7 +41,7 @@ class Reference(Keyword):
 
 class And(object):
     grammar = omit([
-        re.compile(r"and", re.IGNORECASE),
+        re.compile(r"and\s", re.IGNORECASE),
         Literal('+'),
         Literal('&'),
     ])
@@ -49,14 +49,14 @@ class And(object):
 
 class Or(object):
     grammar = omit([
-        re.compile(r"or", re.IGNORECASE),
+        re.compile(r"or\s", re.IGNORECASE),
         Literal('|'),
     ])
 
 
 class Not(object):
     grammar = omit([
-        re.compile(r"not", re.IGNORECASE),
+        re.compile(r"not\s", re.IGNORECASE),
         Literal('-'),
     ])
 
