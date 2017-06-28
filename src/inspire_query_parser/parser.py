@@ -1,5 +1,5 @@
 from __future__ import unicode_literals, print_function
-from pypeg2 import attr, Keyword, Literal, maybe_some, parse, omit, optional, re, word
+from pypeg2 import attr, Keyword, Literal, parse, omit, optional, re, Symbol, word, K, Enum
 
 import ast
 from config import INSPIRE_PARSER_KEYWORDS
@@ -28,37 +28,34 @@ class ListRule(ast.ListOp):
 
 # #### Keywords ####
 class Find(Keyword):
-    regex = re.compile(r"(find|fin|f)\s", re.IGNORECASE)
+    keyword = "find"
+    regex = re.compile(r"({0})\s".format("|".join([keyword[:i] for i in range(len(keyword) + 1, 0, -1)])), re.IGNORECASE)
+    grammar = Enum(*[k for i in range(1, len(keyword) + 1) for k in (K(keyword[:i] + " "), K(keyword[:i].upper() + " "))])
 
 
 class Fulltext(Keyword):
     regex = re.compile(r"fulltext", re.IGNORECASE)
+    grammar = Enum(K("fulltext"), K("FULLTEXT"))
 
 
 class Reference(Keyword):
     regex = re.compile(r"reference", re.IGNORECASE)
+    grammar = Enum(K("reference"))
 
 
-class And(object):
-    grammar = omit([
-        re.compile(r"and\s", re.IGNORECASE),
-        Literal('+'),
-        Literal('&'),
-    ])
+class And(Keyword):
+    regex = re.compile(r"(and|\+|&)", re.IGNORECASE)
+    grammar = Enum(K("and"), K("AND"), "+", "&")
 
 
-class Or(object):
-    grammar = omit([
-        re.compile(r"or\s", re.IGNORECASE),
-        Literal('|'),
-    ])
+class Or(Keyword):
+    regex = re.compile(r"(or|\|)", re.IGNORECASE)
+    grammar = Enum(K("or"), K("OR"), "|")
 
 
-class Not(object):
-    grammar = omit([
-        re.compile(r"not\s", re.IGNORECASE),
-        Literal('-'),
-    ])
+class Not(Keyword):
+    regex = re.compile(r"(not|-)", re.IGNORECASE)
+    grammar = Enum(K("not"), K("NOT"), "-")
 
 
 class Range(object):
@@ -72,7 +69,8 @@ class Qualifier(LeafRule):
 
 
 class NormalPhrase(LeafRule):
-    grammar = attr('value', word)
+    Symbol.check_keywords = True
+    grammar = attr('value', Symbol)
 
 
 class NormalPhraseSpanTail(LeafRule):
@@ -195,14 +193,38 @@ class StartRule(UnaryRule):
 
 
 if __name__ == '__main__':
+    # Find keyword combined with other production rules
     print(parse('find author "ellis"', StartRule))
-    print(parse('find author ellis->zed', StartRule))
-    print(parse('find author "ellis"->"zed"', StartRule))
+    print(parse("FIN author:'ellis'", StartRule))
+    print(parse('f author ellis', StartRule))
+
+    # Invenio like search
     print(parse("author:ellis", StartRule))
+
+    # Boolean
     print(parse("author ellis and title 'boson'", StartRule))
+    print(parse("author ellis AND title boson", StartRule))
+    print(parse("author ellis | title 'boson'", StartRule))
+    print(parse("author ellis OR title 'boson'", StartRule))
+    print(parse("author ellis + title 'boson'", StartRule))
+    print(parse("author ellis & title 'boson'", StartRule))
+
+    # Negation
+    print(parse("author ellis and not title 'boson'", StartRule))
+    print(parse("author ellis and not title boson", StartRule))
+    print(parse("-title 'boson'", StartRule))
+
+    # Nested expressions
     print(parse("author ellis and (title boson or (author /^xi$/ and title foo))", StartRule))
+
+    # Metadata search
     print(parse("fulltext:boson", StartRule))
     print(parse("reference ellis", StartRule))
     print(parse('reference "Ellis"', StartRule))
+
+    # Only phrases
     print(parse('ellis', StartRule))
     print(parse("'ellis'", StartRule))
+
+    # print(parse("title e-10", StartRule))
+    # print(parse("title e,10 and author ellis", StartRule))
