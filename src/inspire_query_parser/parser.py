@@ -121,13 +121,12 @@ class RegexPhrase(LeafRule):
 
 
 class Phrase(ListRule):
-    # TODO refactor to have the list rule after ONE attr('children',[...])
-    grammar = [
-        attr('children', (NormalPhrase, NormalPhraseSpanTail)),
-        attr('children', (ExactPhrase, ExactPhraseSpanTail)),
-        attr('children', PartialPhrase),
-        attr('children', RegexPhrase),
-    ]
+    grammar = attr('children', [
+        (NormalPhrase, NormalPhraseSpanTail),
+        (ExactPhrase, ExactPhraseSpanTail),
+        PartialPhrase,
+        RegexPhrase,
+    ])
 
 
 class FulltextOp(UnaryRule):
@@ -179,10 +178,10 @@ class NotQuery(UnaryRule):
 
 
 class BooleanQuery(UnaryRule):
-    grammar = [
-        attr('op', AndQuery),
-        attr('op', OrQuery)
-    ]
+    grammar = attr('op', [
+        AndQuery,
+        OrQuery,
+    ])
 
 
 class ParenthesizedQuery(UnaryRule):
@@ -193,17 +192,17 @@ class QueryExpressionTail(UnaryRule):
     pass
 
 
-QueryExpression.grammar = [
-    attr('children', (TermExpression, QueryExpressionTail)),
-    attr('children', NotQuery),
-    attr('children', ParenthesizedQuery),
-]
+QueryExpression.grammar = attr('children', [
+    (TermExpression, QueryExpressionTail),
+    NotQuery,
+    ParenthesizedQuery,
+])
 
 
-QueryExpressionTail.grammar = [
-    attr('op', BooleanQuery),
-    attr('op', None)
-]
+QueryExpressionTail.grammar = attr('op', [
+    BooleanQuery,
+    None
+])
 
 
 class StartRule(UnaryRule):
