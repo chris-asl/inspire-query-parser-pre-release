@@ -79,8 +79,15 @@ class Terminal(LeafRule):
     grammar = attr('value', Symbol), maybe_some([" ", ",", "."])
 
 
+class TerminalTail(UnaryRule):
+    pass
+
+
 class Terminals(ListRule):
-    grammar = contiguous(attr('children', some(Terminal)))
+    grammar = contiguous(attr('children', (Terminal, TerminalTail)))
+
+
+TerminalTail.grammar = attr('op', [Terminals, None])
 
 
 class NormalPhrase(UnaryRule):
@@ -114,6 +121,7 @@ class RegexPhrase(LeafRule):
 
 
 class Phrase(ListRule):
+    # TODO refactor to have the list rule after ONE attr('children',[...])
     grammar = [
         attr('children', (NormalPhrase, NormalPhraseSpanTail)),
         attr('children', (ExactPhrase, ExactPhraseSpanTail)),
@@ -200,8 +208,8 @@ QueryExpressionTail.grammar = [
 
 class StartRule(UnaryRule):
     grammar = [
-        attr('op', QueryExpression),
         (omit(Find), attr('op', QueryExpression)),
+        attr('op', QueryExpression),
     ]
 # ########################
 
@@ -244,7 +252,7 @@ if __name__ == '__main__':
     # print(parse("find Higgs boson", StartRule))
     # print(parse("author ellis, j.", StartRule))
     # print(parse("author j., ellis", StartRule))
-    # print(parse("f title Super Collider Physics", StartRule))
+    print(parse("f title Super Collider Physics", StartRule))
     # print(parse("find title Alternative the Phase-II upgrade of the ATLAS Inner Detector", StartRule))
     # print(parse("find title na61/shine", StartRule))
     print(parse("title foo and author abtrall", StartRule))
