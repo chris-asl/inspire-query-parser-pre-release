@@ -29,6 +29,8 @@ if __name__ == '__main__':
     print(parse("fulltext:boson", StartRule))
     print(parse("reference:Ellis", StartRule))
     print(parse('reference "Ellis"', StartRule))
+    print(parse("exactauthor:M.Vanderhaeghen.1", StartRule))
+    print(parse('authorcount:42', StartRule))
 
     # Only phrases
     print(parse('ellis', StartRule))

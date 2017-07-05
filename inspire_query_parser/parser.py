@@ -38,6 +38,16 @@ class Find(Keyword):
         *[k for i in range(1, len(keyword) + 1) for k in (K(keyword[:i] + " "), K(keyword[:i].upper() + " "))])
 
 
+class ExactAuthor(Keyword):
+    regex = re.compile(r"exactauthor", re.IGNORECASE)
+    grammar = Enum(K("exactauthor"), K("EXACTAURTHOR"))
+
+
+class AuthorCount(Keyword):
+    regex = re.compile(r"authorcount", re.IGNORECASE)
+    grammar = Enum(K("authorcount"), K("AUTHORCOUNT"))
+
+
 class Fulltext(Keyword):
     regex = re.compile(r"fulltext", re.IGNORECASE)
     grammar = Enum(K("fulltext"), K("FULLTEXT"))
@@ -75,7 +85,7 @@ class Qualifier(LeafRule):
 
 class Terminal(LeafRule):
     Symbol.check_keywords = True
-    Symbol.regex = re.compile(r"(\w+([-/]\w+)*)")
+    Symbol.regex = re.compile(r"(\w+([-/.]\w+)*)")
     grammar = attr('value', Symbol), maybe_some([" ", ",", "."])
 
 
@@ -129,6 +139,14 @@ class Phrase(ListRule):
     ])
 
 
+class ExactAuthorOp(UnaryRule):
+    grammar = omit(ExactAuthor), omit(optional(':')), attr('op', NormalPhrase)
+
+
+class AuthorCountOp(UnaryRule):
+    grammar = omit(AuthorCount), omit(optional(':')), attr('op', re.compile("\d+"))
+
+
 class FulltextOp(UnaryRule):
     grammar = omit(Fulltext), omit(optional(':')), attr('op', NormalPhrase)
 
@@ -154,10 +172,12 @@ class TermExpression(UnaryRule):
     grammar = attr(
         'op',
         [
-            TermExpressionWithoutColon,
-            TermExpressionWithColon,
+            AuthorCountOp,
+            ExactAuthorOp,
             FulltextOp,
             ReferenceOp,
+            TermExpressionWithColon,
+            TermExpressionWithoutColon,
             Phrase,
         ]
     )
