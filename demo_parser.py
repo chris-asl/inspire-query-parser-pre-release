@@ -36,7 +36,7 @@ if __name__ == '__main__':
     print(parse('ellis', StartRule))
     print(parse("'ellis'", StartRule))
 
-    # # Non trivial terminals
+    # Non trivial terminals
     print(parse("find Higgs boson", StartRule))
     print(parse("author ellis, j.", StartRule))
     print(parse("author j., ellis", StartRule))
@@ -45,3 +45,6 @@ if __name__ == '__main__':
     print(parse("find title na61/shine", StartRule))
     print(parse("title foo and author abtrall", StartRule))
     print(parse("title e-10 and -author:ellis", StartRule))
+
+    # Recognizing same terminal token differently.
+    print(parse("a a, ellis", StartRule))
