@@ -1,6 +1,5 @@
 # coding=utf-8
-from inspire_query_parser.ast import UnaryOp, Leaf, BinaryOp, ListOp
-from inspire_query_parser.parser import StartRule
+from ..ast import UnaryOp, Leaf, BinaryOp, ListOp
 
 INDENTATION = 4
 
@@ -57,7 +56,8 @@ def tree_print(tree):
 
 
 if __name__ == '__main__':
-    from pypeg2 import parse
-    tree = parse("author ellis, j and title foo", StartRule)
-    print(tree)
-    print("\n" + tree_print(tree))
+    pass
+    # from pypeg2 import parse
+    # tree = parse("author ellis, j and title foo", StartRule)
+    # print(tree)
+    # print("\n" + tree_print(tree))

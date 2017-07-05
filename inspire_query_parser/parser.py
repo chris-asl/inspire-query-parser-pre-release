@@ -1,9 +1,9 @@
 from __future__ import unicode_literals, print_function
-from pypeg2 import attr, Keyword, Literal, parse, omit, optional, re, Symbol, word, K, Enum, contiguous, some, \
-    maybe_some
 
-import ast
-from config import INSPIRE_PARSER_KEYWORDS
+from pypeg2 import attr, Keyword, Literal, parse, omit, optional, re, Symbol, word, K, Enum, contiguous, maybe_some
+
+from . import ast
+from .config import INSPIRE_PARSER_KEYWORDS
 
 
 class LeafRule(ast.Leaf):
