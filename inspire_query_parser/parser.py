@@ -1,3 +1,4 @@
+# coding=utf-8
 from __future__ import unicode_literals, print_function
 
 from pypeg2 import attr, Keyword, Literal, parse, omit, optional, re, Symbol, word, K, Enum, contiguous, maybe_some
@@ -86,7 +87,7 @@ class Qualifier(LeafRule):
 class Terminal(LeafRule):
     Symbol.check_keywords = True
     Symbol.regex = re.compile(r"(\w+([-/.']\w+)*)", re.UNICODE)
-    grammar = attr('value', Symbol), maybe_some([" ", ",", ".", ":"])
+    grammar = attr('value', Symbol), maybe_some([" ", ",", ".", ":", "，"])
 
 
 class TerminalTail(UnaryRule):

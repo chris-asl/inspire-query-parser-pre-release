@@ -50,6 +50,8 @@ if __name__ == '__main__':
     print(parse("title foo and author abtrall", StartRule))
     print(parse("title e-10 and -author:ellis", StartRule))
     print(parse("find a d'hoker and a gagne", StartRule))
+    print(parse('a pang，yi', StartRule))  # Full-width comma unicode character
+
 
     # Recognizing same terminal token differently.
     print(parse("a a, ellis", StartRule))
