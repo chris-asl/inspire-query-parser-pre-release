@@ -21,8 +21,8 @@ def recursive_printer(node, level=-INDENTATION):
     new_level = INDENTATION + level
 
     if issubclass(type(node), Leaf):
-        value = "" if not node.value.__str__() or node.value.__str__() == "None" \
-            else node.__class__.__name__ + " {" + node.value.__str__() + "}"
+        value = "" if not repr(node.value) or repr(node.value) == "None" \
+            else node.__class__.__name__ + " {" + repr(node.value) + "}"
 
         ret_str = emit_symbol_at_level_str(value, new_level) if value != "" else ""
     else:
@@ -37,8 +37,12 @@ def recursive_printer(node, level=-INDENTATION):
             ret_str += recursive_printer(node.right, new_level)
 
         elif issubclass(type(node), ListOp):
-            for c in node.children:
-                ret_str += recursive_printer(c, new_level)
+            try:
+                len(node.children)
+                for c in node.children:
+                    ret_str += recursive_printer(c, new_level)
+            except TypeError:
+                ret_str += recursive_printer(node.children, new_level)
             ret_str += emit_symbol_at_level_str("▆", new_level, True)
 
         elif not node:
@@ -49,15 +53,9 @@ def recursive_printer(node, level=-INDENTATION):
     return ret_str
 
 
-def tree_print(tree):
+def emit_tree_repr(tree):
+    print("Converting: " + str(tree))
     ret_str = recursive_printer(tree)
     ret_str += emit_symbol_at_level_str("▆", 0, True)
     return ret_str
 
-
-if __name__ == '__main__':
-    pass
-    # from pypeg2 import parse
-    # tree = parse("author ellis, j and title foo", StartRule)
-    # print(tree)
-    # print("\n" + tree_print(tree))

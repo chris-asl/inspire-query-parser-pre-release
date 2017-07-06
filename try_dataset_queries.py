@@ -5,7 +5,7 @@ import sys
 from pypeg2 import parse
 
 from inspire_query_parser.parser import StartRule
-from inspire_query_parser.utils.utils import tree_print
+from inspire_query_parser.utils.utils import emit_tree_repr
 
 unsupported = {"collection", "refersto", "citedby"}
 
@@ -16,7 +16,7 @@ if __name__ == '__main__':
 
             try:
                 t = parse(line, StartRule)
-                # print(tree_print(t))
+                # print(emit_tree_repr(t))
 
                 queries_read += 1
             except (ValueError, SyntaxError):
