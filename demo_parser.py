@@ -1,3 +1,6 @@
+# coding=utf-8
+from __future__ import unicode_literals, print_function
+
 from pypeg2 import parse
 from inspire_query_parser.parser import StartRule
 
@@ -48,3 +51,6 @@ if __name__ == '__main__':
 
     # Recognizing same terminal token differently.
     print(parse("a a, ellis", StartRule))
+
+    # Unicode terminals
+    print(parse('a ekström and t γ-radiation', StartRule))
