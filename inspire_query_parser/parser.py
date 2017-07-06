@@ -157,7 +157,7 @@ class ReferenceOp(LeafRule):
 ########################
 
 
-class QueryExpression(ListRule):
+class Statement(UnaryRule):
     pass
 
 
@@ -184,50 +184,44 @@ class TermExpression(UnaryRule):
     )
 
 
-class AndQuery(UnaryRule):
-    grammar = omit(And), attr('op', QueryExpression)
+class Expression(UnaryRule):
+    pass
 
 
-class OrQuery(UnaryRule):
-    grammar = omit(Or), attr('op', QueryExpression)
+class AndQuery(BinaryRule):
+    grammar = attr('left', Expression), omit(And), attr('right', Statement)
+
+
+class OrQuery(BinaryRule):
+    grammar = attr('left', Expression), omit(Or), attr('right', Statement)
 # ########################
 
 
 # #### Main productions ####
 class NotQuery(UnaryRule):
-    grammar = omit(Not), attr('op', QueryExpression)
-
-
-class BooleanQuery(UnaryRule):
-    grammar = attr('op', [
-        AndQuery,
-        OrQuery,
-    ])
+    grammar = omit(Not), attr('op', Statement)
 
 
 class ParenthesizedQuery(UnaryRule):
-    grammar = omit(Literal('(')), attr('op', QueryExpression), omit(Literal(')'))
+    grammar = omit(Literal('(')), attr('op', Statement), omit(Literal(')'))
 
 
-class QueryExpressionTail(UnaryRule):
-    pass
-
-
-QueryExpression.grammar = attr('children', [
-    (TermExpression, QueryExpressionTail),
+Expression.grammar = attr('op', [
     NotQuery,
     ParenthesizedQuery,
+    TermExpression,
 ])
 
 
-QueryExpressionTail.grammar = attr('op', [
-    BooleanQuery,
-    None
+Statement.grammar = attr('op', [
+    AndQuery,
+    OrQuery,
+    Expression,
 ])
 
 
 class StartRule(UnaryRule):
     grammar = [
-        (omit(Find), attr('op', QueryExpression)),
-        attr('op', QueryExpression),
+        (omit(Find), attr('op', Statement)),
+        attr('op', Statement),
     ]
