@@ -96,4 +96,5 @@ ENV/
 .ropeproject
 
 queries.txt
+queries_not_supported_yet.txt
 
