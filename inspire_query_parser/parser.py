@@ -86,7 +86,7 @@ class Qualifier(LeafRule):
 class Terminal(LeafRule):
     Symbol.check_keywords = True
     Symbol.regex = re.compile(r"(\w+([-/.']\w+)*)", re.UNICODE)
-    grammar = attr('value', Symbol), maybe_some([" ", ",", "."])
+    grammar = attr('value', Symbol), maybe_some([" ", ",", ".", ":"])
 
 
 class TerminalTail(UnaryRule):

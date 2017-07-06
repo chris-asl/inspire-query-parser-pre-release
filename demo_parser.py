@@ -45,11 +45,11 @@ if __name__ == '__main__':
     print(parse("author j., ellis", StartRule))
     print(parse("f title Super Collider Physics", StartRule))
     print(parse("find title Alternative the Phase-II upgrade of the ATLAS Inner Detector or title foo", StartRule))
+    print(parse("find t Closed string field theory: Quantum action", StartRule))
     print(parse("find title na61/shine", StartRule))
     print(parse("title foo and author abtrall", StartRule))
     print(parse("title e-10 and -author:ellis", StartRule))
     print(parse("find a d'hoker and a gagne", StartRule))
-
 
     # Recognizing same terminal token differently.
     print(parse("a a, ellis", StartRule))
