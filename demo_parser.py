@@ -48,6 +48,8 @@ if __name__ == '__main__':
     print(parse("find title na61/shine", StartRule))
     print(parse("title foo and author abtrall", StartRule))
     print(parse("title e-10 and -author:ellis", StartRule))
+    print(parse("find a d'hoker and a gagne", StartRule))
+
 
     # Recognizing same terminal token differently.
     print(parse("a a, ellis", StartRule))
