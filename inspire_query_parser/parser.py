@@ -140,20 +140,20 @@ class Phrase(ListRule):
     ])
 
 
-class ExactAuthorOp(UnaryRule):
-    grammar = omit(ExactAuthor), omit(optional(':')), attr('op', NormalPhrase)
+class ExactAuthorOp(LeafRule):
+    grammar = omit(ExactAuthor), omit(optional(':')), attr('value', NormalPhrase)
 
 
-class AuthorCountOp(UnaryRule):
-    grammar = omit(AuthorCount), omit(optional(':')), attr('op', re.compile("\d+"))
+class AuthorCountOp(LeafRule):
+    grammar = omit(AuthorCount), omit(optional(':')), attr('value', re.compile("\d+"))
 
 
-class FulltextOp(UnaryRule):
-    grammar = omit(Fulltext), omit(optional(':')), attr('op', NormalPhrase)
+class FulltextOp(LeafRule):
+    grammar = omit(Fulltext), omit(optional(':')), attr('value', NormalPhrase)
 
 
-class ReferenceOp(UnaryRule):
-    grammar = omit(Reference), omit(optional(':')), attr('op', [ExactPhrase, NormalPhrase])
+class ReferenceOp(LeafRule):
+    grammar = omit(Reference), omit(optional(':')), attr('value', [ExactPhrase, NormalPhrase])
 ########################
 
 
