@@ -265,7 +265,7 @@ ParenthesizedQuery.grammar = omit(Literal('(')), attr('op', [
 ]), omit(Literal(')'))
 
 
-class StartRule(UnaryRule):
+class Query(UnaryRule):
     grammar = [
         (omit(Find), attr('op', [
             AndQuery,
