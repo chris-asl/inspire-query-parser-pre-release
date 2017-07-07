@@ -168,10 +168,19 @@ class QualifierExpression(BinaryRule):
     grammar = attr('left', Qualifier), omit(optional(':')), attr('right', Phrase)
 
 
-class TermExpression(UnaryRule):
-    grammar = attr(
-        'op',
-        [
+class NotQuery(UnaryRule):
+    pass
+
+
+class ParenthesizedQuery(UnaryRule):
+    pass
+
+
+class AndQuery(BinaryRule):
+    grammar = \
+        attr('left', [
+            NotQuery,
+            ParenthesizedQuery,
             AuthorCountRangeOp,
             AuthorCountOp,
             ExactAuthorOp,
@@ -179,43 +188,46 @@ class TermExpression(UnaryRule):
             ReferenceOp,
             QualifierExpression,
             Phrase,
-        ]
-    )
-
-
-class Expression(UnaryRule):
-    pass
-
-
-class AndQuery(BinaryRule):
-    grammar = attr('left', Expression), omit(And), attr('right', Statement)
+        ]), \
+        omit(And), \
+        attr('right', Statement)
 
 
 class OrQuery(BinaryRule):
-    grammar = attr('left', Expression), omit(Or), attr('right', Statement)
+    grammar = \
+        attr('left', [
+            NotQuery,
+            ParenthesizedQuery,
+            AuthorCountRangeOp,
+            AuthorCountOp,
+            ExactAuthorOp,
+            FulltextOp,
+            ReferenceOp,
+            QualifierExpression,
+            Phrase,
+        ]), \
+        omit(Or), \
+        attr('right', Statement)
 # ########################
 
 
 # #### Main productions ####
-class NotQuery(UnaryRule):
-    grammar = omit(Not), attr('op', Statement)
+NotQuery.grammar = omit(Not), attr('op', Statement)
 
-
-class ParenthesizedQuery(UnaryRule):
-    grammar = omit(Literal('(')), attr('op', Statement), omit(Literal(')'))
-
-
-Expression.grammar = attr('op', [
-    NotQuery,
-    ParenthesizedQuery,
-    TermExpression,
-])
-
+ParenthesizedQuery.grammar = omit(Literal('(')), attr('op', Statement), omit(Literal(')'))
 
 Statement.grammar = attr('op', [
     AndQuery,
     OrQuery,
-    Expression,
+    NotQuery,
+    ParenthesizedQuery,
+    AuthorCountRangeOp,
+    AuthorCountOp,
+    ExactAuthorOp,
+    FulltextOp,
+    ReferenceOp,
+    QualifierExpression,
+    Phrase,
 ])
 
 
