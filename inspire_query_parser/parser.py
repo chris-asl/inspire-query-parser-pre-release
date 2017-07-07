@@ -161,11 +161,7 @@ class Statement(UnaryRule):
     pass
 
 
-class TermExpressionWithoutColon(BinaryRule):
-    grammar = attr('left', Qualifier), attr('right', Phrase)
-
-
-class TermExpressionWithColon(BinaryRule):
+class QualifierExpression(BinaryRule):
     grammar = attr('left', Qualifier), omit(optional(':')), attr('right', Phrase)
 
 
@@ -177,8 +173,7 @@ class TermExpression(UnaryRule):
             ExactAuthorOp,
             FulltextOp,
             ReferenceOp,
-            TermExpressionWithColon,
-            TermExpressionWithoutColon,
+            QualifierExpression,
             Phrase,
         ]
     )
