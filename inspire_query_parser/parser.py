@@ -160,10 +160,6 @@ class ReferenceOp(UnaryRule):
 ########################
 
 
-class Statement(UnaryRule):
-    pass
-
-
 class QualifierExpression(BinaryRule):
     grammar = attr('left', Qualifier), omit(optional(':')), attr('right', Phrase)
 
@@ -177,7 +173,13 @@ class ParenthesizedQuery(UnaryRule):
 
 
 class AndQuery(BinaryRule):
-    grammar = \
+    pass
+
+
+class OrQuery(BinaryRule):
+    pass
+
+AndQuery.grammar = \
         attr('left', [
             NotQuery,
             ParenthesizedQuery,
@@ -190,11 +192,21 @@ class AndQuery(BinaryRule):
             Phrase,
         ]), \
         omit(And), \
-        attr('right', Statement)
+        attr('right', [
+            AndQuery,
+            OrQuery,
+            NotQuery,
+            ParenthesizedQuery,
+            AuthorCountRangeOp,
+            AuthorCountOp,
+            ExactAuthorOp,
+            FulltextOp,
+            ReferenceOp,
+            QualifierExpression,
+            Phrase,
+        ])
 
-
-class OrQuery(BinaryRule):
-    grammar = \
+OrQuery.grammar = \
         attr('left', [
             NotQuery,
             ParenthesizedQuery,
@@ -207,16 +219,24 @@ class OrQuery(BinaryRule):
             Phrase,
         ]), \
         omit(Or), \
-        attr('right', Statement)
+        attr('right', [
+            AndQuery,
+            OrQuery,
+            NotQuery,
+            ParenthesizedQuery,
+            AuthorCountRangeOp,
+            AuthorCountOp,
+            ExactAuthorOp,
+            FulltextOp,
+            ReferenceOp,
+            QualifierExpression,
+            Phrase,
+        ])
 # ########################
 
 
 # #### Main productions ####
-NotQuery.grammar = omit(Not), attr('op', Statement)
-
-ParenthesizedQuery.grammar = omit(Literal('(')), attr('op', Statement), omit(Literal(')'))
-
-Statement.grammar = attr('op', [
+NotQuery.grammar = omit(Not), attr('op', [
     AndQuery,
     OrQuery,
     NotQuery,
@@ -230,9 +250,47 @@ Statement.grammar = attr('op', [
     Phrase,
 ])
 
+ParenthesizedQuery.grammar = omit(Literal('(')), attr('op', [
+    AndQuery,
+    OrQuery,
+    NotQuery,
+    ParenthesizedQuery,
+    AuthorCountRangeOp,
+    AuthorCountOp,
+    ExactAuthorOp,
+    FulltextOp,
+    ReferenceOp,
+    QualifierExpression,
+    Phrase,
+]), omit(Literal(')'))
+
 
 class StartRule(UnaryRule):
     grammar = [
-        (omit(Find), attr('op', Statement)),
-        attr('op', Statement),
+        (omit(Find), attr('op', [
+            AndQuery,
+            OrQuery,
+            NotQuery,
+            ParenthesizedQuery,
+            AuthorCountRangeOp,
+            AuthorCountOp,
+            ExactAuthorOp,
+            FulltextOp,
+            ReferenceOp,
+            QualifierExpression,
+            Phrase,
+        ])),
+        attr('op', [
+            AndQuery,
+            OrQuery,
+            NotQuery,
+            ParenthesizedQuery,
+            AuthorCountRangeOp,
+            AuthorCountOp,
+            ExactAuthorOp,
+            FulltextOp,
+            ReferenceOp,
+            QualifierExpression,
+            Phrase,
+        ]),
     ]
