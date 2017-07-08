@@ -105,41 +105,32 @@ class NormalPhrase(UnaryRule):
     grammar = attr('op', Terminals)
 
 
-class NormalPhraseRange(BinaryRule):
-    grammar = attr('left', Terminals), omit(Range), attr('right', Terminals)
-
-
-class ExactPhrase(LeafRule):
-    grammar = omit(Literal('"')), attr('value', word), omit(Literal('"'))
-
-
 class ExactPhraseRange(BinaryRule):
     grammar = omit(Literal('"')), attr('left', Terminals), omit(Literal('"')), \
               omit(Range), \
               omit(Literal('"')), attr('right', Terminals), omit(Literal('"'))
 
 
-class PartialPhrase(LeafRule):
-    grammar = omit(Literal("'")), attr('value', word), omit(Literal("'"))
+class NormalPhraseRange(BinaryRule):
+    grammar = attr('left', Terminals), omit(Range), attr('right', Terminals)
 
 
-class RegexPhrase(LeafRule):
-    grammar = omit(Literal('/^')), attr('value', word), omit(Literal('$/'))
+class SpecialPhrase(LeafRule):
+    """Accepting value with either double/single quotes or a regex value (/^.../$)."""
+    grammar = attr('value', re.compile(r"((/\^[^$]*\$/)|('[^']*')|(\"[^\"]*\"))")),
 
 
 class Phrase(UnaryRule):
     grammar = attr('op', [
-        RegexPhrase,
-        PartialPhrase,
         ExactPhraseRange,
-        ExactPhrase,
         NormalPhraseRange,
+        SpecialPhrase,
         NormalPhrase
     ])
 
 
 class ExactAuthorOp(UnaryRule):
-    grammar = omit(ExactAuthor), omit(optional(':')), attr('op', NormalPhrase)
+    grammar = omit(ExactAuthor), omit(optional(':')), attr('op', NormalPhrase)  # TODO check normal phrase is needed
 
 
 class AuthorCountOp(UnaryRule):
@@ -152,11 +143,11 @@ class AuthorCountRangeOp(BinaryRule):
 
 
 class FulltextOp(UnaryRule):
-    grammar = omit(Fulltext), omit(optional(':')), attr('op', NormalPhrase)
+    grammar = omit(Fulltext), omit(optional(':')), attr('op', NormalPhrase)  # TODO add Partial and Exact phrases
 
 
 class ReferenceOp(UnaryRule):
-    grammar = omit(Reference), omit(optional(':')), attr('op', [ExactPhrase, NormalPhrase])
+    grammar = omit(Reference), omit(optional(':')), attr('op', [re.compile(r"\"[^\"]*\""), NormalPhrase])
 ########################
 
 

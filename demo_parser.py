@@ -51,6 +51,7 @@ if __name__ == '__main__':
     print(emit_tree_repr(parse("find title na61/shine", Query)))
     print(emit_tree_repr(parse("title foo and author abtrall", Query)))
     print(emit_tree_repr(parse("title e-10 and -author:ellis", Query)))
+    print(emit_tree_repr(parse("title 'e-10' and -author:ellis", Query)))
     print(emit_tree_repr(parse("find a d'hoker and a gagne", Query)))
     print(emit_tree_repr(parse('a pang，yi', Query)))  # Full-width comma unicode character
     print(emit_tree_repr(parse('f a SU(2)', Query)))
