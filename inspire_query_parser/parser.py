@@ -120,15 +120,6 @@ class SpecialPhrase(LeafRule):
     grammar = attr('value', re.compile(r"((/\^[^$]*\$/)|('[^']*')|(\"[^\"]*\"))")),
 
 
-class Phrase(UnaryRule):
-    grammar = attr('op', [
-        ExactPhraseRange,
-        NormalPhraseRange,
-        SpecialPhrase,
-        NormalPhrase
-    ])
-
-
 class ExactAuthorOp(UnaryRule):
     grammar = omit(ExactAuthor), omit(optional(':')), attr('op', NormalPhrase)  # TODO check normal phrase is needed
 
@@ -152,7 +143,13 @@ class ReferenceOp(UnaryRule):
 
 
 class QualifierExpression(BinaryRule):
-    grammar = attr('left', Qualifier), omit(optional(':')), attr('right', Phrase)
+    grammar = attr('left', Qualifier), omit(optional(':')), \
+              attr('right', [
+                  ExactPhraseRange,
+                  NormalPhraseRange,
+                  SpecialPhrase,
+                  NormalPhrase
+              ])
 
 
 class NotQuery(UnaryRule):
@@ -180,7 +177,10 @@ AndQuery.grammar = \
             FulltextOp,
             ReferenceOp,
             QualifierExpression,
-            Phrase,
+            ExactPhraseRange,
+            NormalPhraseRange,
+            SpecialPhrase,
+            NormalPhrase,
         ]), \
         omit(And), \
         attr('right', [
@@ -194,7 +194,10 @@ AndQuery.grammar = \
             FulltextOp,
             ReferenceOp,
             QualifierExpression,
-            Phrase,
+            ExactPhraseRange,
+            NormalPhraseRange,
+            SpecialPhrase,
+            NormalPhrase,
         ])
 
 OrQuery.grammar = \
@@ -207,7 +210,10 @@ OrQuery.grammar = \
             FulltextOp,
             ReferenceOp,
             QualifierExpression,
-            Phrase,
+            ExactPhraseRange,
+            NormalPhraseRange,
+            SpecialPhrase,
+            NormalPhrase,
         ]), \
         omit(Or), \
         attr('right', [
@@ -221,7 +227,10 @@ OrQuery.grammar = \
             FulltextOp,
             ReferenceOp,
             QualifierExpression,
-            Phrase,
+            ExactPhraseRange,
+            NormalPhraseRange,
+            SpecialPhrase,
+            NormalPhrase,
         ])
 # ########################
 
@@ -238,7 +247,10 @@ NotQuery.grammar = omit(Not), attr('op', [
     FulltextOp,
     ReferenceOp,
     QualifierExpression,
-    Phrase,
+    ExactPhraseRange,
+    NormalPhraseRange,
+    SpecialPhrase,
+    NormalPhrase,
 ])
 
 ParenthesizedQuery.grammar = omit(Literal('(')), attr('op', [
@@ -252,7 +264,10 @@ ParenthesizedQuery.grammar = omit(Literal('(')), attr('op', [
     FulltextOp,
     ReferenceOp,
     QualifierExpression,
-    Phrase,
+    ExactPhraseRange,
+    NormalPhraseRange,
+    SpecialPhrase,
+    NormalPhrase,
 ]), omit(Literal(')'))
 
 
@@ -269,7 +284,10 @@ class Query(UnaryRule):
             FulltextOp,
             ReferenceOp,
             QualifierExpression,
-            Phrase,
+            ExactPhraseRange,
+            NormalPhraseRange,
+            SpecialPhrase,
+            NormalPhrase,
         ])),
         attr('op', [
             AndQuery,
@@ -282,6 +300,9 @@ class Query(UnaryRule):
             FulltextOp,
             ReferenceOp,
             QualifierExpression,
-            Phrase,
+            ExactPhraseRange,
+            NormalPhraseRange,
+            SpecialPhrase,
+            NormalPhrase,
         ]),
     ]
