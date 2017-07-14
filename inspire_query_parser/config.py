@@ -49,6 +49,9 @@ INSPIRE_PARSER_KEYWORDS = {
     'journal': 'journal',
     'j': 'journal',
 
+    # recid
+    'recid': 'recid',
+
     # Reference
     'reference': 'reference',
     'citation': 'reference',
