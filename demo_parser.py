@@ -16,7 +16,8 @@ if __name__ == '__main__':
 
     # Boolean operator testing
     print(emit_tree_repr(parse("author ellis and title 'boson'", Query)))
-    print(emit_tree_repr(parse("a ellis AND title boson", Query)))
+    print(emit_tree_repr(parse("f a appelquist and date 1983", Query)))
+    print(emit_tree_repr(parse("fin a henneaux and citedby a nicolai", Query)))
     print(emit_tree_repr(parse("au ellis | title 'boson'", Query)))
     print(emit_tree_repr(parse("author ellis OR title 'boson'", Query)))
     print(emit_tree_repr(parse("author ellis + title 'boson'", Query)))
