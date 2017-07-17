@@ -52,6 +52,7 @@ if __name__ == '__main__':
                                Query)))
     print(emit_tree_repr(parse("find t Closed string field theory: Quantum action", Query)))
     print(emit_tree_repr(parse("find title na61/shine", Query)))
+    print(emit_tree_repr(parse("find j phys.rev. and vol d85", Query)))
     print(emit_tree_repr(parse("title foo and author abtrall", Query)))
     print(emit_tree_repr(parse("title e-10 and -author:ellis", Query)))
     print(emit_tree_repr(parse("title 'e-10' and -author:ellis", Query)))
@@ -64,7 +65,7 @@ if __name__ == '__main__':
     print(emit_tree_repr(parse("citedbyx:author:s.p.martin.1", Query)))
     print(emit_tree_repr(parse("citedby:author:s.p.martin.1", Query)))
     print(emit_tree_repr(parse("-refersto:recid:1374998 and citedby:(A.A.Aguilar.Arevalo.1)", Query)))
-    print(emit_tree_repr(parse("citedby:(author A.A.Aguilar.Arevalo.1)", Query)))
+    print(emit_tree_repr(parse("citedby:(author A.A.Aguilar.Arevalo.1 and not a ellis)", Query)))
     print(emit_tree_repr(parse("citedby:refersto:recid:1432705", Query)))
 
     # Unicode terminals
