@@ -67,4 +67,9 @@ INSPIRE_PARSER_KEYWORDS = {
     # Title
     'title': 'title',
     't': 'title',
+
+    # Topcite
+    'cited': 'cited',
+    'topcit': 'cited',
+    'topcite': 'cited',
 }
