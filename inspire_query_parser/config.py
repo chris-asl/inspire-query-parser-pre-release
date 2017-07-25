@@ -35,11 +35,17 @@ INSPIRE_PARSER_KEYWORDS = {
     'bulletin-bd-no': 'reportnumber',
     'eprint': 'reportnumber',
 
+    # Cataloguer
+    'cataloguer': 'cataloguer',
+    'cat': 'cataloguer',
+
     # Caption
     'caption': 'caption',
 
-    # Citedby
+    # Citedby related
     'citedby': 'citedby',
+    'citedexcludingselfcites': 'citedexcludingselfcites',
+    'cx': 'citedexcludingselfcites',
 
     # coden
     'bc': 'journal',
@@ -128,6 +134,20 @@ INSPIRE_PARSER_KEYWORDS = {
     'volume': 'journal',
     'vol': 'journal',
 
+    # Keyword
+    'keyword': 'keyword',
+    'k': 'keyword',
+    'keywords': 'keyword',
+    'kw': 'keyword',
+
+    # Note
+    'note': 'note',
+    'notes': 'note',
+
+    # Postal code
+    'postalcode': 'postalcode',
+    'zip': 'postalcode',
+
     # rawref
     'rawref': 'rawref',
 
@@ -155,6 +175,9 @@ INSPIRE_PARSER_KEYWORDS = {
     # Title
     'title': 'title',
     't': 'title',
+
+    # texkey
+    'texkey': 'texkey',
 
     # Topcite
     'cited': 'cited',
