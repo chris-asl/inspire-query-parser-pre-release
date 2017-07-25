@@ -184,3 +184,5 @@ INSPIRE_PARSER_KEYWORDS = {
     'topcit': 'cited',
     'topcite': 'cited',
 }
+
+INSPIRE_KEYWORDS_SET = set(INSPIRE_PARSER_KEYWORDS.values())
