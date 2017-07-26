@@ -86,6 +86,10 @@ INSPIRE_PARSER_KEYWORDS = {
     'dadd': 'datecreated',
     'da': 'datecreated',
 
+    # Date earliest
+    'date-earliest': 'date-earliest',
+    'de': 'date-earliest',
+
     # Date updated
     'date-updated': 'datemodified',
     'dupd': 'datemodified',
@@ -133,6 +137,10 @@ INSPIRE_PARSER_KEYWORDS = {
     'spicite': 'journal',
     'volume': 'journal',
     'vol': 'journal',
+
+    # Journal year
+    'journal-year': 'journal-year',
+    'jy': 'journal-year',
 
     # Keyword
     'keyword': 'keyword',
